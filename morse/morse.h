@@ -15,5 +15,8 @@ struct AlfabetoMorse{
 };
 typedef struct AlfabetoMorse Morse;
 
-void ler_morse ();
-pNodoA* consulta(pNodoA *a, int chave);
+
+Morse* InicializaABP(void);
+Morse* InsereABP(Morse *a, int chave);
+void ler_morse (Morse a);
+Morse* consulta(Morse *a, int chave);
