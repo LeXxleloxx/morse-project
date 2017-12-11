@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "morse.h"
+#include "morse2.h"
 #include <locale.h>
 
 main()
@@ -10,6 +10,18 @@ main()
 	Morse *b;	//AVL
 	a=InicializaABP();
 	b=InicializaABP();
-	
-	lermorse(a);
+
+	setlocale(LC_ALL, "Portuguese");
+    printf("Lendo tabela morse...\n");
+
+ler_morse(a);
+
+//printf("%c",a->letra);
+
+    printf("\nCodificando...\n");
+
+copia_arquivo(a, &comp);
+
+	printf("Numero de comparacoes: %i",comp);
+	return 0;
 }
