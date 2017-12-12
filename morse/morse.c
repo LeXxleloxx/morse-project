@@ -2,13 +2,13 @@ morse old.c
 DETALHES
 ATIVIDADE
 Hoje
-12:55
+07:15
 
 Você fez o upload de 1 item
 C
 morse old.c
-Nenhuma atividade registrada antes de 11 de dezembro de 2017
-Minimizada 
+Nenhuma atividade registrada antes de 12 de dezembro de 2017
+Fechada
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,18 +28,20 @@ Morse* InicializaABP(void)
     return NULL;
 }
 
-Morse* InsereABP(Morse *a, int chave, char codaux)
+Morse* InsereABP(Morse *a, char chave, char codaux[MAX])
 {
     if (a == NULL)
     {
         char codaux[MAX];
         a = (Morse*) malloc(sizeof(Morse));
-        printf("\n Alocando ponteiros");
+        //printf("\n Alocando ponteiros");
+        printf(" chave = %c\n",chave);
         a->letra = chave;
+        printf("letra = %c",a->letra);
+        system("pause");
         a->esq = NULL;
         a->dir = NULL;
         strcpy(a->cod,codaux);
-        // a->cod = codaux;
     }
     else if (chave < (a->letra))
         a->esq = InsereABP(a->esq,chave, codaux);
@@ -50,35 +52,31 @@ Morse* InsereABP(Morse *a, int chave, char codaux)
 
 void ler_morse (Morse *a)
 {
-    char ch; 							//buffer para caractere lido no arquivo
+    char ch;							//buffer para caractere lido no arquivo
     FILE *arq;
     arq = fopen("TabelaMorse.txt", "r");//abre o arquivo
 
     if (arq == NULL) 					//se não conseguiu abrir
     {
-        printf("Problemas na leitura do arquivo\n");
-        return 0;
+        printf("Problemas na leitura do arquivo tabela\n");
     }
     else
     {
         while(!feof(arq))
         {
-            ch= fgetc(arq);
-            printf("%c ",ch);
-            // fseek(arq,1* sizeof(char),SEEK_CUR); //incrementa ponteiro do arquivo para ignorar o TAB
+            ch=fgetc(arq);
+            fseek(arq,1* sizeof(char),SEEK_CUR); //incrementa ponteiro do arquivo para ignorar o TAB
             int cont = 0;
             char codaux[MAX];
-            while(((ch = fgetc(arq)) != '\n') &&  !feof(arq ))	//enquanto nao terminar a linha, guardar como o codigo morse
+            while(((codaux[cont] = fgetc(arq)) != '\n') &&  !feof(arq ))	//enquanto nao terminar a linha, guardar como o codigo morse
             {
-                codaux[cont] = ch;
-                printf("%c ",codaux[cont]);
                 cont++;
             }
-            codaux[cont]='\n';
-            //fseek(arq,1* sizeof(char),SEEK_CUR);
-            InsereABP(a,ch,codaux);
+            codaux[cont]='\0';
+            printf("%c|%s \n",ch,codaux);
+           // InsereABP(a,ch,codaux);
         }
-            fclose(arq);
+        fclose(arq);
     }
     //ImprimePreFix(a);
 }
@@ -92,7 +90,7 @@ void copia_arquivo(Morse *a, int *comp)
 
     if (arq_in == NULL) 					    //se não conseguiu abrir
     {
-        printf("Problemas na leitura do arquivo\n");
+        printf("Problemas na leitura do arquivo de entrada\n");
         return;
     }
     else
@@ -100,6 +98,7 @@ void copia_arquivo(Morse *a, int *comp)
         while((ch = fgetc(arq_in)) != EOF)
         {
             Morse* novo=InicializaABP();
+            printf("ch = %c",ch);
             remove_acento(ch);
             toupper(ch);                       //minúsculo para maiúsculo
             if( novo=consulta(a,ch,comp) == NULL)
@@ -135,18 +134,18 @@ Morse* consulta(Morse *a, int chave, int *comp)
         }
         else
             a = a->dir;
-            consulta(a,chave,comp);
+        consulta(a,chave,comp);
     }
     return NULL; //se não achou
 }
 
 char    remove_acento( char c)
 {
-    if( (192 <= c <= 197) || (224 <= c <= 229) )    return 'A';
-    if( (200 <= c <= 203) || (232 <= c <= 235) )    return 'E';
-    if( (204 <= c <= 207) || (236 <= c <= 239) )    return 'I';
-    if( (210 <= c <= 214) || (242 <= c <= 246) )    return 'O';
-    if( (217 <= c <= 220) || (249 <= c <= 252) )    return 'U';
+    if( (192 <= c && c <= 197) || (224 <= c && c <= 229) )    return 'A';
+    if( (200 <= c && c <= 203) || (232 <= c && c <= 235) )    return 'E';
+    if( (204 <= c && c <= 207) || (236 <= c && c <= 239) )    return 'I';
+    if( (210 <= c && c <= 214) || (242 <= c && c <= 246) )    return 'O';
+    if( (217 <= c && c <= 220) || (249 <= c && c <= 252) )    return 'U';
 }
 
 void ImprimePreFix(Morse *a)
@@ -157,4 +156,5 @@ void ImprimePreFix(Morse *a)
         ImprimePreFix(a->esq);
         ImprimePreFix(a->dir);
     }
+    else printf("error\n");
 }
