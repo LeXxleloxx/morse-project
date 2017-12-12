@@ -5,23 +5,20 @@
 
 main()
 {
-	int	comp=0;	//numero de comparações
-	Morse *a;	//ABP
-	Morse *b;	//AVL
-	a=InicializaABP();
-	b=InicializaABP();
+    int	comp=0;	//numero de comparações
+    Morse *a;	//ABP
+//	Morse *b;	//AVL
+    a=InicializaABP();
 
-	setlocale(LC_ALL, "Portuguese");
+    setlocale(LC_ALL, "Portuguese");
     printf("Lendo tabela morse...\n");
 
-ler_morse(a);
+    ler_morse(a);
 
-//printf("%c",a->letra);
+  //  printf("\nCodificando...\n");
 
-    printf("\nCodificando...\n");
+  //  copia_arquivo(a, &comp);
 
-copia_arquivo(a, &comp);
-
-	printf("Numero de comparacoes: %i",comp);
-	return 0;
+   // printf("Numero de comparacoes: %i",comp);
+    return 0;
 }
