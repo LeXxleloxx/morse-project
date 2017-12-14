@@ -14,11 +14,11 @@ main()
     printf("Lendo tabela morse...\n");
 
     ler_morse(a);
+    printf("\nCodificando...\n");
 
-  //  printf("\nCodificando...\n");
+    copia_arquivo(a, &comp);
 
-  //  copia_arquivo(a, &comp);
-
-   // printf("Numero de comparacoes: %i",comp);
+    printf("Numero de comparacoes: %i",comp);
     return 0;
 }
+
