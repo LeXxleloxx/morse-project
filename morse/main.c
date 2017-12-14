@@ -13,7 +13,10 @@ main()
     setlocale(LC_ALL, "Portuguese");
     printf("Lendo tabela morse...\n");
 
-    ler_morse(a);
+    a=ler_morse(a);
+
+    ImprimePreFix(a);
+
     printf("\nCodificando...\n");
 
     copia_arquivo(a, &comp);
@@ -21,4 +24,3 @@ main()
     printf("Numero de comparacoes: %i",comp);
     return 0;
 }
-
