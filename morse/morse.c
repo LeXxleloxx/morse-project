@@ -1,15 +1,3 @@
-morse old.c
-DETALHES
-ATIVIDADE
-Hoje
-07:15
-
-Você fez o upload de 1 item
-C
-morse old.c
-Nenhuma atividade registrada antes de 12 de dezembro de 2017
-Fechada
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "morse2.h"
@@ -32,16 +20,13 @@ Morse* InsereABP(Morse *a, char chave, char codaux[MAX])
 {
     if (a == NULL)
     {
-        char codaux[MAX];
         a = (Morse*) malloc(sizeof(Morse));
-        //printf("\n Alocando ponteiros");
-        printf(" chave = %c\n",chave);
         a->letra = chave;
-        printf("letra = %c",a->letra);
-        system("pause");
+        printf("letra = %c ",a->letra);
         a->esq = NULL;
         a->dir = NULL;
         strcpy(a->cod,codaux);
+        printf("codigo = %s\n",a->cod);
     }
     else if (chave < (a->letra))
         a->esq = InsereABP(a->esq,chave, codaux);
@@ -62,23 +47,22 @@ void ler_morse (Morse *a)
     }
     else
     {
-        while(!feof(arq))
+        while( (ch=fgetc(arq))!= EOF )
         {
-            ch=fgetc(arq);
             fseek(arq,1* sizeof(char),SEEK_CUR); //incrementa ponteiro do arquivo para ignorar o TAB
             int cont = 0;
             char codaux[MAX];
-            while(((codaux[cont] = fgetc(arq)) != '\n') &&  !feof(arq ))	//enquanto nao terminar a linha, guardar como o codigo morse
+            while(( (codaux[cont] = fgetc(arq)) != '\n') &&  codaux[cont]!= EOF )	//enquanto nao terminar a linha, guardar como o codigo morse
             {
                 cont++;
             }
             codaux[cont]='\0';
-            printf("%c|%s \n",ch,codaux);
-           // InsereABP(a,ch,codaux);
+           // printf("%c|%s \n",ch,codaux);
+            a=InsereABP(a,ch,codaux);
         }
         fclose(arq);
+            ImprimePreFix(a);
     }
-    //ImprimePreFix(a);
 }
 
 void copia_arquivo(Morse *a, int *comp)
@@ -98,14 +82,19 @@ void copia_arquivo(Morse *a, int *comp)
         while((ch = fgetc(arq_in)) != EOF)
         {
             Morse* novo=InicializaABP();
-            printf("ch = %c",ch);
+            printf("ch = %c ",ch);
             remove_acento(ch);
+            printf("\nch pos remover acento %c ",ch);
             toupper(ch);                       //minúsculo para maiúsculo
-            if( novo=consulta(a,ch,comp) == NULL)
+            printf("\nch pos upper acento %c ",ch);
+            novo=consulta(a,ch,comp);
+            if((novo == NULL)
             {
+                printf("%c ",novo->letra);
+                printf("%s ",novo->cod);
                 if(ch == 32)
                 {
-                    fputs('/', arq_out);
+                    fputs("/", arq_out);
                 }
                 else
                     printf("Caractere nao reconhecido\n");
@@ -155,6 +144,5 @@ void ImprimePreFix(Morse *a)
         printf("%c\n",a->letra);
         ImprimePreFix(a->esq);
         ImprimePreFix(a->dir);
-    }
-    else printf("error\n");
+}
 }
