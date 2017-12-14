@@ -22,11 +22,9 @@ Morse* InsereABP(Morse *a, char chave, char codaux[MAX])
     {
         a = (Morse*) malloc(sizeof(Morse));
         a->letra = chave;
-        printf("letra = %c ",a->letra);
         a->esq = NULL;
         a->dir = NULL;
         strcpy(a->cod,codaux);
-        printf("codigo = %s\n",a->cod);
     }
     else if (chave < (a->letra))
         a->esq = InsereABP(a->esq,chave, codaux);
@@ -35,7 +33,7 @@ Morse* InsereABP(Morse *a, char chave, char codaux[MAX])
     return a;
 }
 
-void ler_morse (Morse *a)
+Morse* ler_morse (Morse *a)
 {
     char ch;							//buffer para caractere lido no arquivo
     FILE *arq;
@@ -57,12 +55,12 @@ void ler_morse (Morse *a)
                 cont++;
             }
             codaux[cont]='\0';
-           // printf("%c|%s \n",ch,codaux);
+            printf("%c|%s \n",ch,codaux);
             a=InsereABP(a,ch,codaux);
         }
         fclose(arq);
-            ImprimePreFix(a);
     }
+    return a;
 }
 
 void copia_arquivo(Morse *a, int *comp)
@@ -72,6 +70,7 @@ void copia_arquivo(Morse *a, int *comp)
     arq_in = fopen("godfather.txt", "r");    //abre o arquivo a ser convertido
     arq_out = fopen("saida.txt", "w");       //cria arquivo de saida
 
+    printf(" primeira letra %c ",a->letra);    //testando se arvore a tem conteudo
     if (arq_in == NULL) 					    //se não conseguiu abrir
     {
         printf("Problemas na leitura do arquivo de entrada\n");
@@ -79,16 +78,18 @@ void copia_arquivo(Morse *a, int *comp)
     }
     else
     {
-        while((ch = fgetc(arq_in)) != EOF)
-        {
-            Morse* novo=InicializaABP();
+     //   while( (ch = fgetc(arq_in)) != EOF)
+    //    {
+            ch = fgetc(arq_in);
+            Morse* novo;
+            novo=InicializaABP();
             printf("ch = %c ",ch);
             remove_acento(ch);
             printf("\nch pos remover acento %c ",ch);
             toupper(ch);                       //minúsculo para maiúsculo
             printf("\nch pos upper acento %c ",ch);
             novo=consulta(a,ch,comp);
-            if((novo == NULL)
+            if(novo == NULL)
             {
                 printf("%c ",novo->letra);
                 printf("%s ",novo->cod);
@@ -100,13 +101,13 @@ void copia_arquivo(Morse *a, int *comp)
                     printf("Caractere nao reconhecido\n");
             }
             fputs(novo->cod, arq_out);
-        }
+      //  }
     }
     fclose(arq_in);
     fclose(arq_out);
 }
 
-Morse* consulta(Morse *a, int chave, int *comp)
+Morse* consulta(Morse *a, char chave, int *comp)
 {
     while (a!=NULL)
     {
@@ -118,12 +119,10 @@ Morse* consulta(Morse *a, int chave, int *comp)
         else if (a->letra > chave)
         {
             *comp++;
-            a = a->esq;
-            consulta(a,chave,comp);
+    return consulta(a->esq,chave,comp);
         }
         else
-            a = a->dir;
-        consulta(a,chave,comp);
+    return consulta(a->dir,chave,comp);
     }
     return NULL; //se não achou
 }
