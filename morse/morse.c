@@ -78,30 +78,23 @@ void copia_arquivo(Morse *a, int *comp)
     }
     else
     {
-     //   while( (ch = fgetc(arq_in)) != EOF)
-    //    {
-            ch = fgetc(arq_in);
+        while( (ch = fgetc(arq_in)) != EOF)
+        {
             Morse* novo;
             novo=InicializaABP();
-            printf("ch = %c ",ch);
-            remove_acento(ch);
-            printf("\nch pos remover acento %c ",ch);
-            toupper(ch);                       //minúsculo para maiúsculo
-            printf("\nch pos upper acento %c ",ch);
+            ch=remove_acento(ch);
+            ch=toupper(ch);                       //minúsculo para maiúsculo
             novo=consulta(a,ch,comp);
             if(novo == NULL)
             {
-                printf("%c ",novo->letra);
-                printf("%s ",novo->cod);
                 if(ch == 32)
-                {
-                    fputs("/", arq_out);
-                }
-                else
-                    printf("Caractere nao reconhecido\n");
+                fputs("/", arq_out);
             }
-            fputs(novo->cod, arq_out);
-      //  }
+            else{
+                fputs(novo->cod, arq_out);
+                fputs(" ", arq_out);
+        }
+        }
     }
     fclose(arq_in);
     fclose(arq_out);
@@ -113,12 +106,12 @@ Morse* consulta(Morse *a, char chave, int *comp)
     {
         if (a->letra == chave )
         {
-            *comp++;
+            comp++;
             return a; //achou então retorna o ponteiro para o nodo
         }
         else if (a->letra > chave)
         {
-            *comp++;
+            comp++;
     return consulta(a->esq,chave,comp);
         }
         else
